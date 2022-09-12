@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: admin
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            gateway:
+              - uri: http://gateway:8080
+            spring-service:
+              - uri: http://spring-service:8080
+            fast-api-service:
+              - uri: http://fast-api-service:8080
+  boot:
+    admin:
+      ui:
+        public-url: http://localhost:8080/admin/

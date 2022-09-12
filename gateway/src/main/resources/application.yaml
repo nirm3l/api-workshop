@@ -1,0 +1,22 @@
+management.endpoints.web.exposure.include: "*"
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - StripPrefix=1
+      routes:
+        - id: admin
+          predicates:
+            - Path=/admin/**
+          uri: http://admin:8080
+        - id: spring-service
+          predicates:
+            - Path=/spring/**
+          uri: http://spring-service:8080
+        - id: fast-api-service
+          predicates:
+            - Path=/fastapi/**
+          uri: http://fast-api-service:8080

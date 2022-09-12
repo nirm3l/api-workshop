@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  gateway:
+    container_name: gateway
+    build:
+      context: gateway
+      dockerfile: Dockerfile
+    image: api-workshop/gateway:latest
+    ports:
+      - 8080:8080
+  admin:
+    container_name: admin
+    build:
+      context: admin
+      dockerfile: Dockerfile
+    image: api-workshop/admin:latest
+  spring-service:
+    container_name: spring-service
+    build:
+      context: spring-service
+      dockerfile: Dockerfile
+    image: api-workshop/spring-service:latest
+    environment:
+      - JAVA_OPTS=-Xmx128m -Xms64m
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 128M
+  fast-api-service:
+    container_name: fast-api-service
+    build:
+      context: fast-api-service
+      dockerfile: Dockerfile
+    image: api-workshop/fast-api-service:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 128M

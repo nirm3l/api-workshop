@@ -44,4 +44,13 @@ public class WikiController {
         return wikiService.getTitles(wiki)
                 .map(title -> ServerSentEvent.builder(title).build());
     }
+
+    @RequestMapping(
+            value = "titles/filter/{word}",
+            produces = { MediaType.TEXT_EVENT_STREAM_VALUE },
+            method = RequestMethod.GET)
+    public Flux<ServerSentEvent<String>> getTitlesFilteredByWord(@PathVariable String word) {
+        return wikiService.getTitlesFiltered(word)
+                .map(title -> ServerSentEvent.builder(title).build());
+    }
 }

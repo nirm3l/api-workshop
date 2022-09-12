@@ -14,6 +14,7 @@ import reactor.util.retry.Retry;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 @Service
 public class WikiService {
@@ -59,6 +60,12 @@ public class WikiService {
         }
 
         return titlesMap.get(wiki).asFlux();
+    }
+
+    public Flux<String> getTitlesFiltered(String word) {
+        Pattern pattern = Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE);
+
+        return titlesMap.get("all").asFlux().filter(title -> pattern.matcher(title).find());
     }
 
     public Flux<WikiRecord> getEvents() {

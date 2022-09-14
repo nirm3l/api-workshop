@@ -12,8 +12,6 @@ import reactor.core.publisher.Sinks;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.retry.Retry;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 @Service
@@ -21,51 +19,36 @@ public class WikiService {
 
     private final WebClient wikiClient;
 
-    private final Sinks.Many<String> wikis;
-
-    private final Map<String, Sinks.Many<String>> titlesMap = new ConcurrentHashMap<>();
+    private final Sinks.Many<WikiRecord> records = Sinks.many().multicast().directBestEffort();
 
     public WikiService(WebClient wikiClient) {
         this.wikiClient = wikiClient;
-        wikis = Sinks.many().multicast().directBestEffort();
-
-        titlesMap.put("all", Sinks.many().multicast().directBestEffort());
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
         getEvents()
                 .filter(event -> event.getWiki() != null && event.getTitle() != null)
-                .doOnNext(event -> {
-                    wikis.tryEmitNext(event.getWiki());
-                    titlesMap.get("all").tryEmitNext(event.getTitle());
-                })
-                .doOnNext(event -> {
-                    if(!titlesMap.containsKey(event.getWiki())) {
-                        titlesMap.put(event.getWiki(), Sinks.many().multicast().directBestEffort());
-                    }
-
-                    titlesMap.get(event.getWiki()).tryEmitNext(event.getTitle());
-                })
+                .doOnNext(records::tryEmitNext)
                 .subscribeOn(Schedulers.boundedElastic()).subscribe();
     }
 
     public Flux<String> getWikis() {
-        return wikis.asFlux().distinct();
+        return records.asFlux().map(wikiRecord -> wikiRecord.getWiki()).distinct();
     }
 
     public Flux<String> getTitles(String wiki) {
-        if(!titlesMap.containsKey(wiki)) {
-            titlesMap.put(wiki, Sinks.many().multicast().directBestEffort());
-        }
+        return records.asFlux().filter(wikiRecord -> wikiRecord.getWiki().equals(wiki)).map(wikiRecord -> wikiRecord.getTitle());
+    }
 
-        return titlesMap.get(wiki).asFlux();
+    public Flux<String> getTitles() {
+        return records.asFlux().map(wikiRecord -> wikiRecord.getTitle());
     }
 
     public Flux<String> getTitlesFiltered(String word) {
         Pattern pattern = Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE);
 
-        return titlesMap.get("all").asFlux().filter(title -> pattern.matcher(title).find());
+        return records.asFlux().filter(record -> pattern.matcher(record.getTitle()).find()).map(wikiRecord -> wikiRecord.getTitle());
     }
 
     public Flux<WikiRecord> getEvents() {

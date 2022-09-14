@@ -32,7 +32,7 @@ public class WikiController {
             produces = { MediaType.TEXT_EVENT_STREAM_VALUE },
             method = RequestMethod.GET)
     public Flux<ServerSentEvent<String>> getTitles() {
-        return wikiService.getTitles("all")
+        return wikiService.getTitles()
                 .map(title -> ServerSentEvent.builder(title).build());
     }
 

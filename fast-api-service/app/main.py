@@ -117,7 +117,7 @@ async def wiki_titles(wiki: str):
 Pyctuator(
     app,
     "fast-api-service",
-    app_url="http://fast-api-service:8080",
+    app_url="http://fast-api-service:8080/",
     pyctuator_endpoint_url="http://fast-api-service:8080/pyctuator",
     registration_url="http://admin:8080/instances"
 )

@@ -20,3 +20,7 @@ spring:
           predicates:
             - Path=/fastapi/**
           uri: http://fast-api-service:8080
+        - id: node-service
+          predicates:
+            - Path=/node/**
+          uri: http://node-service:8080

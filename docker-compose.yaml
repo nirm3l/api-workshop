@@ -38,3 +38,14 @@ services:
         limits:
           cpus: '1.0'
           memory: 128M
+  node-service:
+    container_name: node-service
+    build:
+      context: node-service
+      dockerfile: Dockerfile
+    image: api-workshop/node-service:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 128M

@@ -64,7 +64,7 @@ public class TitlesController : ControllerBase
 
             foreach (WikiRecord record in records) {
                 if (record.title.IndexOf(word, 0, StringComparison.OrdinalIgnoreCase) != -1) {
-                    await Response.WriteAsync($"data: {record.title}\r\r");
+                    await Response.WriteAsync($"data: {record.title}\n\n");
                 }
 
                 lastRecord = record;

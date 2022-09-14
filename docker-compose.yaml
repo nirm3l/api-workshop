@@ -21,12 +21,12 @@ services:
       dockerfile: Dockerfile
     image: api-workshop/spring-service:latest
     environment:
-      - JAVA_OPTS=-Xmx256m -Xms128m
+      - JAVA_OPTS=-Xmx512m -Xms128m
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 256M
+          memory: 512M
   fast-api-service:
     container_name: fast-api-service
     build:
@@ -37,7 +37,7 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 256M
+          memory: 512M
   node-service:
     container_name: node-service
     build:
@@ -48,7 +48,7 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 256M
+          memory: 512M
   core-service:
     container_name: core-service
     build:
@@ -59,4 +59,4 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 256M
+          memory: 512M

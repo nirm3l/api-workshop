@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+
 @RestController
 public class WikiController {
 
@@ -23,8 +25,8 @@ public class WikiController {
             produces = { MediaType.TEXT_EVENT_STREAM_VALUE },
             method = RequestMethod.GET)
     public Flux<ServerSentEvent<String>> getWikis() {
-        return wikiService.getWikis().distinct()
-                .map(wiki -> ServerSentEvent.builder(wiki).build());
+        return Flux.merge(getPingEvents(), wikiService.getWikis().distinct()
+                .map(wiki -> ServerSentEvent.builder(wiki).event("data").build()));
     }
 
     @RequestMapping(
@@ -32,8 +34,8 @@ public class WikiController {
             produces = { MediaType.TEXT_EVENT_STREAM_VALUE },
             method = RequestMethod.GET)
     public Flux<ServerSentEvent<String>> getTitles() {
-        return wikiService.getTitles()
-                .map(title -> ServerSentEvent.builder(title).build());
+        return Flux.merge(getPingEvents(), wikiService.getTitles()
+                .map(title -> ServerSentEvent.builder(title).event("data").build()));
     }
 
     @RequestMapping(
@@ -41,8 +43,8 @@ public class WikiController {
             produces = { MediaType.TEXT_EVENT_STREAM_VALUE },
             method = RequestMethod.GET)
     public Flux<ServerSentEvent<String>> getTitlesForWiki(@PathVariable String wiki) {
-        return wikiService.getTitles(wiki)
-                .map(title -> ServerSentEvent.builder(title).build());
+        return Flux.merge(getPingEvents(), wikiService.getTitles(wiki)
+                .map(title -> ServerSentEvent.builder(title).event("data").build()));
     }
 
     @RequestMapping(
@@ -50,7 +52,11 @@ public class WikiController {
             produces = { MediaType.TEXT_EVENT_STREAM_VALUE },
             method = RequestMethod.GET)
     public Flux<ServerSentEvent<String>> getTitlesFilteredByWord(@PathVariable String word) {
-        return wikiService.getTitlesFiltered(word)
-                .map(title -> ServerSentEvent.builder(title).build());
+        return Flux.merge(getPingEvents(), wikiService.getTitlesFiltered(word)
+                .map(title -> ServerSentEvent.builder(title).event("data").build()));
+    }
+
+    public Flux<ServerSentEvent<String>> getPingEvents() {
+        return Flux.interval(Duration.ofSeconds(10)).map(i -> ServerSentEvent.builder((String)null).event("ping").build());
     }
 }

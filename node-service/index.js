@@ -50,10 +50,12 @@ const getNewRecords = (wikiRecords, lastEvent) => {
     return records;
 }
 
-const getEvents = async (write, f, distinct=false, condition) => {
+const writeEvents = async (res, f, distinct=false, condition) => {
     let lastEvent = null;
 
     const duplicationCheck = new Set()
+
+    let counter = 0;
 
     while (true) {
         if (wikiRecords.length && lastEvent !== wikiRecords.peekBack()) {
@@ -69,7 +71,11 @@ const getEvents = async (write, f, distinct=false, condition) => {
                         duplicationCheck.add(value);
                     }
 
-                    write(value);
+                    if(!await res.write(`event: data\ndata: ${value}\n\n`)) {
+                        res.end();
+
+                        return;
+                    }
                 }
 
                 lastEvent = data;
@@ -77,6 +83,18 @@ const getEvents = async (write, f, distinct=false, condition) => {
         }
 
         await new Promise(resolve => setTimeout(resolve, 100));
+
+        counter += 1;
+
+        if (counter > 100) {
+            counter = 0;
+
+            if(!await res.write(`type: 'ping'\n\n`)) {
+                res.end();
+
+                return;
+            }
+        }
     }
 }
 
@@ -94,33 +112,29 @@ const setupResponse = (res) => {
 app.get('/titles', async function(req, res) {
     setupResponse(res);
 
-    return getEvents((value) => {
-        res.write(`data: ${value}\n\n`);
-    },(value) => value.title);
+    res.on("finish", () => {
+        console.log('response finished!');
+    });
+
+    return writeEvents(res,(value) => value.title);
 });
 
 app.get('/titles/:wiki', async function(req, res) {
     setupResponse(res);
 
-    return getEvents((value) => {
-        res.write(`data: ${value}\n\n`);
-    },(value) => value.title, false, (value) => value.wiki === req.params.wiki);
+    return writeEvents(res,(value) => value.title, false, (value) => value.wiki === req.params.wiki);
 });
 
 app.get('/titles/filter/:word', async function(req, res) {
     setupResponse(res);
 
-    return getEvents((value) => {
-        res.write(`data: ${value}\n\n`);
-    },(value) => value.title, false, (value) => value.title.match(new RegExp(req.params.word, 'i')));
+    return writeEvents(res,(value) => value.title, false, (value) => value.title.match(new RegExp(req.params.word, 'i')));
 });
 
 app.get('/wikis', async function(req, res) {
     setupResponse(res);
 
-    return getEvents((value) => {
-        res.write(`data: ${value}\n\n`);
-    },(value) => value.wiki, true);
+    return writeEvents(res,(value) => value.wiki, true);
 });
 
 app.listen(PORT, function() {

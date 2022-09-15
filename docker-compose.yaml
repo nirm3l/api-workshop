@@ -44,6 +44,8 @@ services:
       context: node-service
       dockerfile: Dockerfile
     image: api-workshop/node-service:latest
+    environment:
+      - NODE_ENV=production
     deploy:
       resources:
         limits:

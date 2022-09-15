@@ -1,22 +1,17 @@
-using System.Collections.Generic;
 using System.Text.Json;
-using System.Text.RegularExpressions;
-
 
 public class WorkerHostedService : BackgroundService
 {
     private static string URL = "https://stream.wikimedia.org/v2/stream/recentchange";
     
     protected override async Task ExecuteAsync(CancellationToken stopToken) {
-        while (!stopToken.IsCancellationRequested) {
-            await LoadWikiRecords();
-        }
+        await LoadWikiRecords(stopToken);
     }
 
-    private async Task LoadWikiRecords() {
+    private async Task LoadWikiRecords(CancellationToken stopToken) {
         HttpClient client = new HttpClient();
 
-        while (true) {
+        while (!stopToken.IsCancellationRequested) {
             try {
                 using (var streamReader = new StreamReader(await client.GetStreamAsync(URL))) {
                     while (!streamReader.EndOfStream) {
@@ -28,7 +23,7 @@ public class WorkerHostedService : BackgroundService
                     }
                 }
             } 
-            catch (Exception ex) {
+            catch (Exception) {
                 await Task.Delay(TimeSpan.FromSeconds(1));
             }
 	    }

@@ -1,10 +1,8 @@
-using System.Collections.Concurrent ;
-
 public class WikiService {
 
-    private static FixedSizedQueue<WikiRecord> WIKI_RECORDS = new FixedSizedQueue<WikiRecord>{Limit=100};
+    private static FixedSizedQueue<WikiRecord> WIKI_RECORDS = new FixedSizedQueue<WikiRecord>{Limit = 100};
     
-    public static ICollection<WikiRecord> GetNewWikiRecords(WikiRecord lastWikiRecord) {
+    public static ICollection<WikiRecord> GetNewWikiRecords(WikiRecord? lastWikiRecord) {
 
         var wikiRecords = new LinkedList<WikiRecord>();
 

@@ -10,7 +10,7 @@ public class EventsService {
         response.Headers.Add("Connection", "keep-alive");
     }
 
-    public async Task WriteNewEvents(Func<WikiRecord, Task> recordHanlder) {
+    public async Task WriteNewEvents(Func<WikiRecord, Task> recordHandler) {
         WikiRecord? lastRecord = null;
 
         int counter = 0;
@@ -19,7 +19,7 @@ public class EventsService {
             var records = WikiService.GetNewWikiRecords(lastRecord);
 
             foreach (WikiRecord record in records) {
-                await recordHanlder(record);
+                await recordHandler(record);
 
                 lastRecord = record;
             }

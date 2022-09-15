@@ -15,6 +15,13 @@ public class TitlesController : ControllerBase
         });
     }
 
+    [HttpGet(Name = "WikiCurrentTitles")]
+    [Route("/titles/current")]
+    public IEnumerable<string?> GetWikiTitles()
+    {
+        return WikiService.GetNewWikiRecords(null).Where(record => record.title != null).Select(record => record.title);
+    }
+
     [HttpGet(Name = "WikiTitles")]
     [Route("/titles/{wiki}")]
     public async Task GetWikiTitles(string wiki)

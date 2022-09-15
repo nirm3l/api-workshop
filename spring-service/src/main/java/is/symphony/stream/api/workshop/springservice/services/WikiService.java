@@ -19,7 +19,7 @@ public class WikiService {
 
     private final WebClient wikiClient;
 
-    private final Sinks.Many<WikiRecord> records = Sinks.many().multicast().directBestEffort();
+    private final Sinks.Many<WikiRecord> records = Sinks.many().replay().limit(100);
 
     public WikiService(WebClient wikiClient) {
         this.wikiClient = wikiClient;

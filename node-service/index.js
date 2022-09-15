@@ -119,6 +119,10 @@ app.get('/titles', async function(req, res) {
     return writeEvents(res,(value) => value.title);
 });
 
+app.get('/titles/current', async function(req, res) {
+    return res.send(wikiRecords.toArray().map(record => record.title));
+});
+
 app.get('/titles/:wiki', async function(req, res) {
     setupResponse(res);
 

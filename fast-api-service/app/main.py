@@ -100,9 +100,9 @@ async def titles():
     return await get_events(lambda x: x.title)
 
 
-@app.get("/state")
-async def state():
-    return wiki_records
+@app.get("/titles/current")
+async def current_titles():
+    return [record.title for record in list(wiki_records) if record is not None]
 
 
 @app.get("/titles/filter/{word}")

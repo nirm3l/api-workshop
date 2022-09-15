@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.List;
 
 @RestController
 public class WikiController {
@@ -36,6 +38,14 @@ public class WikiController {
     public Flux<ServerSentEvent<String>> getTitles() {
         return Flux.merge(getPingEvents(), wikiService.getTitles()
                 .map(title -> ServerSentEvent.builder(title).event("data").build()));
+    }
+
+    @RequestMapping(
+            value = "titles/current",
+            produces = { MediaType.APPLICATION_JSON_VALUE },
+            method = RequestMethod.GET)
+    public Mono<List<String>> getCurrentTitles() {
+        return wikiService.getTitles().take(100).collectList();
     }
 
     @RequestMapping(

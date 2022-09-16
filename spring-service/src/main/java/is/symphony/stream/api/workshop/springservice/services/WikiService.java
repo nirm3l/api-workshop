@@ -21,40 +21,39 @@ public class WikiService {
 
     private final Sinks.Many<WikiRecord> records = Sinks.many().replay().limit(100);
 
-    public WikiService(WebClient wikiClient) {
-        this.wikiClient = wikiClient;
+    private final static String URL = "https://stream.wikimedia.org/v2/stream";
+
+    public WikiService() {
+        this.wikiClient = WebClient.builder().baseUrl(URL).build();
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
-        getEvents()
-                .filter(event -> event.getWiki() != null && event.getTitle() != null)
-                .doOnNext(records::tryEmitNext)
-                .subscribeOn(Schedulers.boundedElastic()).subscribe();
+        getEvents().filter(event -> event.getWiki() != null && event.getTitle() != null)
+                .doOnNext(records::tryEmitNext).subscribeOn(Schedulers.boundedElastic()).subscribe();
     }
 
     public Flux<String> getWikis() {
-        return records.asFlux().map(wikiRecord -> wikiRecord.getWiki()).distinct();
+        return records.asFlux().map(WikiRecord::getWiki).distinct();
     }
 
     public Flux<String> getTitles(String wiki) {
-        return records.asFlux().filter(wikiRecord -> wikiRecord.getWiki().equals(wiki)).map(wikiRecord -> wikiRecord.getTitle());
+        return records.asFlux().filter(wikiRecord -> wikiRecord.getWiki().equals(wiki)).map(WikiRecord::getTitle);
     }
 
     public Flux<String> getTitles() {
-        return records.asFlux().map(wikiRecord -> wikiRecord.getTitle());
+        return records.asFlux().map(WikiRecord::getTitle);
     }
 
     public Flux<String> getTitlesFiltered(String word) {
         Pattern pattern = Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE);
 
-        return records.asFlux().filter(record -> pattern.matcher(record.getTitle()).find()).map(wikiRecord -> wikiRecord.getTitle());
+        return records.asFlux().filter(record -> pattern.matcher(record.getTitle()).find()).map(WikiRecord::getTitle);
     }
 
     public Flux<WikiRecord> getEvents() {
         return wikiClient.get().uri("/mediawiki.recentchange")
                 .retrieve().bodyToFlux(new ParameterizedTypeReference<ServerSentEvent<WikiRecord>>() {})
-                .mapNotNull(ServerSentEvent::data)
-                .retryWhen(Retry.indefinitely());
+                .mapNotNull(ServerSentEvent::data).retryWhen(Retry.indefinitely());
     }
 }

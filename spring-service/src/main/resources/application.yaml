@@ -4,6 +4,3 @@ spring:
 
 management:
   endpoints.web.exposure.include: "*"
-
-wiki:
-  url: https://stream.wikimedia.org/v2/stream

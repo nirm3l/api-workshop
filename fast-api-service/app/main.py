@@ -22,8 +22,7 @@ async def startup_event() -> None:
     async def load_wiki_records():
         while True:
             try:
-                async with sse_client.EventSource(
-                        WIKI_STREAM_URL + '/recentchange', timeout=ClientTimeout(sock_read=0)) as event_source:
+                async with sse_client.EventSource(WIKI_STREAM_URL + '/recentchange', timeout=ClientTimeout(sock_read=0)) as event_source:
                     try:
                         async for event in event_source:
                             try:
@@ -56,8 +55,7 @@ def get_new_records(wiki_records: deque, last_event: WikiRecord):
     return reversed(records)
 
 
-async def get_events(f: Callable[[WikiRecord], str] = lambda x: x, distinct: bool = False,
-                     condition: Optional[Callable[[WikiRecord], bool]] = None):
+async def get_events(f: Callable[[WikiRecord], str] = lambda x: x, distinct: bool = False, condition: Optional[Callable[[WikiRecord], bool]] = None):
     async def event_generator():
         last_event = None
 
@@ -75,10 +73,7 @@ async def get_events(f: Callable[[WikiRecord], str] = lambda x: x, distinct: boo
 
                             duplication_check.add(value)
 
-                        yield {
-                            "event": "data",
-                            "data": f(record)
-                        }
+                        yield {"event": "data", "data": f(record)}
 
                     last_event = record
 

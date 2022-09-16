@@ -6,10 +6,7 @@ from collections import deque
 from pydantic import ValidationError
 from typing import Callable, Optional
 from aiohttp import ClientTimeout
-
 from .wiki.schemas import WikiRecord
-from pyctuator.pyctuator import Pyctuator
-
 import asyncio, logging, aiohttp, re
 
 app = FastAPI()
@@ -113,11 +110,3 @@ async def filter(word: str):
 @app.get("/titles/{wiki}")
 async def wiki_titles(wiki: str):
     return await get_events(lambda x: x.title, condition=lambda x: x.wiki == wiki)
-
-Pyctuator(
-    app,
-    "fast-api-service",
-    app_url="http://fast-api-service:8080/",
-    pyctuator_endpoint_url="http://fast-api-service:8080/pyctuator",
-    registration_url="http://admin:8080/instances"
-)

@@ -106,7 +106,6 @@ const setupResponse = (res) => {
     });
 
     res.flushHeaders();
-
 }
 
 app.get('/titles', async function(req, res) {
@@ -120,25 +119,29 @@ app.get('/titles', async function(req, res) {
 });
 
 app.get('/titles/current', async function(req, res) {
-    return res.send(wikiRecords.toArray().map(record => record.title));
+    return res.send(wikiRecords.toArray()
+        .map(record => record.title));
 });
 
 app.get('/titles/:wiki', async function(req, res) {
     setupResponse(res);
 
-    return writeEvents(res,(value) => value.title, false, (value) => value.wiki === req.params.wiki);
+    return writeEvents(res,
+        (value) => value.title, false, (value) => value.wiki === req.params.wiki);
 });
 
 app.get('/titles/filter/:word', async function(req, res) {
     setupResponse(res);
 
-    return writeEvents(res,(value) => value.title, false, (value) => value.title.match(new RegExp(req.params.word, 'i')));
+    return writeEvents(res,(value) => value.title, false,
+        (value) => value.title.match(new RegExp(req.params.word, 'i')));
 });
 
 app.get('/wikis', async function(req, res) {
     setupResponse(res);
 
-    return writeEvents(res,(value) => value.wiki, true);
+    return writeEvents(res,
+        (value) => value.wiki, true);
 });
 
 app.listen(PORT, function() {

@@ -11,20 +11,20 @@ spring:
         - id: admin
           predicates:
             - Path=/admin/**
-          uri: http://admin:8080
+          uri: http://admin:8081
         - id: spring-service
           predicates:
             - Path=/spring/**
-          uri: http://spring-service:8080
+          uri: http://spring-service:8082
         - id: fast-api-service
           predicates:
             - Path=/fastapi/**
-          uri: http://fast-api-service:8080
+          uri: http://fast-api-service:8083
         - id: node-service
           predicates:
             - Path=/node/**
-          uri: http://node-service:8080
+          uri: http://node-service:8084
         - id: core-service
           predicates:
             - Path=/core/**
-          uri: http://core-service:8080
+          uri: http://core-service:8085

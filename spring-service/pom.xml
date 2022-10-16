@@ -14,7 +14,7 @@
 	<name>springservice</name>
 	<description>Stream Api Workshop - Spring Service</description>
 	<properties>
-		<java.version>18</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -47,6 +47,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<imageName>nirmelregistry.azurecr.io/api-workshop/spring-service-native:latest</imageName>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

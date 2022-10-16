@@ -9,14 +9,17 @@ spring:
             gateway:
               - uri: http://gateway:8080/
             spring-service:
-              - uri: http://spring-service:8080/
+              - uri: http://spring-service:8082/
             fast-api-service:
-              - uri: http://fast-api-service:8080/
+              - uri: http://fast-api-service:8083/
             node-service:
-              - uri: http://node-service:8080/
+              - uri: http://node-service:8084/
             core-service:
-              - uri: http://core-service:8080/
+              - uri: http://core-service:8085/
   boot:
     admin:
       ui:
         public-url: http://localhost:8080/admin/
+
+server:
+  port: 8081

@@ -8,24 +8,10 @@ services:
     image: api-workshop/gateway:latest
     ports:
       - 8080:8080
-  admin:
-    container_name: admin
-    build:
-      context: admin
-      dockerfile: Dockerfile
-    image: api-workshop/admin:latest
-  spring-service:
-    container_name: spring-service
-    build:
-      context: spring-service
-      dockerfile: Dockerfile
-    image: api-workshop/spring-service:latest
-    environment:
-      - JAVA_OPTS=-Xmx512m -Xms128m
     deploy:
       resources:
         limits:
-          cpus: '1.0'
+          cpus: '0.5'
           memory: 512M
   fast-api-service:
     container_name: fast-api-service
@@ -36,29 +22,5 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.0'
-          memory: 512M
-  node-service:
-    container_name: node-service
-    build:
-      context: node-service
-      dockerfile: Dockerfile
-    image: api-workshop/node-service:latest
-    environment:
-      - NODE_ENV=production
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
-  core-service:
-    container_name: core-service
-    build:
-      context: core-service
-      dockerfile: Dockerfile
-    image: api-workshop/core-service:latest
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
+          cpus: '0.5'
           memory: 512M

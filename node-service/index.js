@@ -8,7 +8,7 @@ app.use(actuator({
     basePath: '/actuator'
 }));
 
-const PORT = 8084;
+const PORT = 8080;
 
 const URL = 'https://stream.wikimedia.org/v2/stream/recentchange';
 const eventSource = new EventSource(URL);

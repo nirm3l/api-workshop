@@ -4,3 +4,7 @@ spring:
 
 management:
   endpoints.web.exposure.include: "*"
+
+  endpoint:
+    env:
+      keys-to-sanitize: secret

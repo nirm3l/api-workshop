@@ -1,0 +1,26 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - StripPrefix=1
+      routes:
+        - id: admin
+          predicates:
+            - Path=/admin/**
+          uri: https://admin.run.app
+        - id: spring-service
+          predicates:
+            - Path=/spring/**
+          uri: https://spring-service.run.app
+        - id: fast-api-service
+          predicates:
+            - Path=/fastapi/**
+          uri: https://fast-api-service.run.app
+        - id: node-service
+          predicates:
+            - Path=/node/**
+          uri: https://node-service.run.app
+        - id: core-service
+          predicates:
+            - Path=/core/**
+          uri: https://core-service.run.app

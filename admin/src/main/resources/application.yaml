@@ -19,7 +19,7 @@ spring:
   boot:
     admin:
       ui:
-        public-url: http://localhost:8081/admin/
+        public-url: http://localhost:8080/admin/
 
 server:
   port: 8081

@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            gateway:
+              - uri: https://gateway${URL_SUFFIX}
+            spring-service:
+              - uri: https://spring-service${URL_SUFFIX}
+            fast-api-service:
+              - uri: https://fast-api-service${URL_SUFFIX}
+            node-service:
+              - uri: https://node-service${URL_SUFFIX}
+            core-service:
+              - uri: https://core-service${URL_SUFFIX}
+  boot:
+    admin:
+      ui:
+        public-url: https://gateway${URL_SUFFIX}/admin/

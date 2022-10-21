@@ -7,20 +7,20 @@ spring:
         - id: admin
           predicates:
             - Path=/admin/**
-          uri: https://admin.run.app
+          uri: https://admin${URL_SUFFIX}
         - id: spring-service
           predicates:
             - Path=/spring/**
-          uri: https://spring-service.run.app
+          uri: https://spring-service${URL_SUFFIX}
         - id: fast-api-service
           predicates:
             - Path=/fastapi/**
-          uri: https://fast-api-service.run.app
+          uri: https://fast-api-service${URL_SUFFIX}
         - id: node-service
           predicates:
             - Path=/node/**
-          uri: https://node-service.run.app
+          uri: https://node-service${URL_SUFFIX}
         - id: core-service
           predicates:
             - Path=/core/**
-          uri: https://core-service.run.app
+          uri: https://core-service${URL_SUFFIX}

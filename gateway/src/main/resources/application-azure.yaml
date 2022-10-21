@@ -1,0 +1,30 @@
+management.endpoints.web.exposure.include: "*"
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      default-filters:
+        - StripPrefix=1
+      routes:
+        - id: admin
+          predicates:
+            - Path=/admin/**
+          uri: https://admin.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+        - id: spring-service
+          predicates:
+            - Path=/spring/**
+          uri: https://spring-service.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+        - id: fast-api-service
+          predicates:
+            - Path=/fastapi/**
+          uri: https://fast-api-service.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+        - id: node-service
+          predicates:
+            - Path=/node/**
+          uri: https://node-service.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+        - id: core-service
+          predicates:
+            - Path=/core/**
+          uri: https://core-service.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}

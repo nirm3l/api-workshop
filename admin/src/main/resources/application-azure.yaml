@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            gateway:
+              - uri: https://gateway.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+            spring-service:
+              - uri: https://spring-service.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+            fast-api-service:
+              - uri: https://fast-api-service.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+            node-service:
+              - uri: https://node-service.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+            core-service:
+              - uri: https://core-service.internal.${CONTAINER_APP_ENV_DNS_SUFFIX}
+  boot:
+    admin:
+      ui:
+        public-url: https://api-gateway.${CONTAINER_APP_ENV_DNS_SUFFIX}/admin/

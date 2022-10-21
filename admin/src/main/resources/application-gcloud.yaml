@@ -17,4 +17,4 @@ spring:
   boot:
     admin:
       ui:
-        public-url: https://gateway${URL_SUFFIX}/admin/
+        public-url: https://admin${URL_SUFFIX}/

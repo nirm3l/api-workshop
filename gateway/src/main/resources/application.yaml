@@ -15,16 +15,16 @@ spring:
         - id: spring-service
           predicates:
             - Path=/spring/**
-          uri: http://spring-service:8082
+          uri: http://spring-service:8080
         - id: fast-api-service
           predicates:
             - Path=/fastapi/**
-          uri: http://fast-api-service:8083
+          uri: http://fast-api-service:8080
         - id: node-service
           predicates:
             - Path=/node/**
-          uri: http://node-service:8084
+          uri: http://node-service:8080
         - id: core-service
           predicates:
             - Path=/core/**
-          uri: http://core-service:8085
+          uri: http://core-service:8080
